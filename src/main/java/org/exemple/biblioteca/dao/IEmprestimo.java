@@ -1,4 +1,8 @@
 package org.exemple.biblioteca.dao;
 
-public class IEmprestimo {
+import java.sql.SQLException;
+import org.exemple.biblioteca.model.Emprestimo;
+
+public interface IEmprestimo {
+    void inserir(Emprestimo emprestimo) throws SQLException;
 }

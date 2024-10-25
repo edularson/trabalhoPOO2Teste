@@ -1,4 +1,8 @@
 package org.exemple.biblioteca.dao;
 
-public class ILivro {
+import java.sql.SQLException;
+import org.exemple.biblioteca.model.Livro;
+
+public interface ILivro {
+    void inserir(Livro livro) throws SQLException;
 }
