@@ -1,4 +1,4 @@
-# Comandos para adicionar no Banco de Dados
+Comandos para adicionar no Banco de Dados
 
 CREATE TABLE usuario (
     usuarioID serial PRIMARY KEY NOT NULL,
