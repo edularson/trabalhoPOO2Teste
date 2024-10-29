@@ -1,0 +1,20 @@
+Comandos para adicionar no Banco de Dados
+
+CREATE TABLE usuario (
+    usuarioID serial PRIMARY KEY NOT NULL,
+    nome VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE livro (
+    livroID serial PRIMARY KEY NOT NULL,
+    titulo VARCHAR(100) NOT NULL,
+    autor VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE emprestimo (
+    emprestimoID serial PRIMARY KEY NOT NULL,
+    usuarioID INT REFERENCES usuario(usuarioID),
+    livroID INT REFERENCES livro(livroID),
+    data_emprestimo DATE NOT NULL,
+    data_devolucao DATE
+);
