@@ -5,17 +5,14 @@ public class Livro {
     private String titulo;
     private String autor;
 
-    // Construtor padrão
     public Livro() {}
 
-    // Construtor com parâmetros
     public Livro(String titulo, String autor) {
         this.titulo = titulo;
         this.autor = autor;
     }
 
-    // Getters e Setters
-    public int getLivroID () {
+    public int getLivroID() {
         return livroID;
     }
 

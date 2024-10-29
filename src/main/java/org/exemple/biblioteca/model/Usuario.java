@@ -4,7 +4,6 @@ public class Usuario {
     private int usuarioID;
     private String nome;
 
-    // Getters e Setters
     public int getUsuarioID() {
         return usuarioID;
     }

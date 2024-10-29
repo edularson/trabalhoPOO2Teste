@@ -1,5 +1,8 @@
 package org.exemple.biblioteca.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +22,7 @@ public class EmprestimoDAO implements IEmprestimo {
              PreparedStatement pstmt = conexao.prepareStatement(sql)) {
             pstmt.setInt(1, emprestimo.getUsuario().getUsuarioID());
             pstmt.setInt(2, emprestimo.getLivro().getLivroID());
-            pstmt.setDate(3, Date.valueOf(emprestimo.getDataEmprestimo())); // Converte LocalDate para Date
+            pstmt.setDate(3, Date.valueOf(emprestimo.getDataEmprestimo()));
             pstmt.setDate(4, emprestimo.getDataDevolucao() != null ? Date.valueOf(emprestimo.getDataDevolucao()) : null);
             pstmt.executeUpdate();
         }
@@ -37,17 +40,15 @@ public class EmprestimoDAO implements IEmprestimo {
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Emprestimo emprestimo = new Emprestimo();
-                emprestimo.setEmprestimoID(rs .getInt("emprestimoID"));
-                emprestimo.setDataEmprestimo(rs.getDate("data_emprestimo").toLocalDate()); // Converte Date para LocalDate
+                emprestimo.setEmprestimoID(rs.getInt("emprestimoID"));
+                emprestimo.setDataEmprestimo(rs.getDate("data_emprestimo").toLocalDate());
                 emprestimo.setDataDevolucao(rs.getDate("data_devolucao") != null ? rs.getDate("data_devolucao").toLocalDate() : null);
 
-                // Criar e setar o usuário
                 Usuario usuario = new Usuario();
                 usuario.setUsuarioID(rs.getInt("usuarioID"));
                 usuario.setNome(rs.getString("usuario_nome"));
                 emprestimo.setUsuario(usuario);
 
-                // Criar e setar o livro
                 Livro livro = new Livro();
                 livro.setLivroID(rs.getInt("livroID"));
                 livro.setTitulo(rs.getString("livro_titulo"));
@@ -57,5 +58,15 @@ public class EmprestimoDAO implements IEmprestimo {
             }
         }
         return emprestimos;
+    }
+
+    public void deletar(int id) throws SQLException {
+        String sql = "DELETE FROM emprestimo WHERE emprestimoID = ?";
+
+        try (Connection conexao = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        }
     }
 }

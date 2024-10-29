@@ -9,7 +9,6 @@ public class Emprestimo {
     private LocalDate dataEmprestimo;
     private LocalDate dataDevolucao;
 
-    // Getters e Setters
     public int getEmprestimoID() {
         return emprestimoID;
     }

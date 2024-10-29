@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="org.exemple.biblioteca.controller.SearchController" prefHeight="400.0" prefWidth="600.0" spacing="10">
+    <Label text="Busca Avançada"/>
+    <TextField fx:id="searchField" promptText="Digite o termo de busca"/>
+    <Button fx:id="btnSearch" onAction="#btnSearchOnAction" text="Buscar"/>
+    <TableView fx:id="tabelaLivros" prefHeight="200.0" prefWidth="600.0">
+        <columns>
+            <TableColumn fx:id="colunaTitulo" text="Título"/>
+            <TableColumn fx:id="colunaAutor" text="Autor"/>
+        </columns>
+    </TableView>
+    <TableView fx:id="tabelaUsuarios" prefHeight="200.0" prefWidth="600.0">
+        <columns>
+            <TableColumn fx:id="colunaNome" text="Nome"/>
+        </columns>
+    </TableView>
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+</VBox>

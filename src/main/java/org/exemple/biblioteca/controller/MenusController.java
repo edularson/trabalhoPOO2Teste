@@ -9,6 +9,7 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
 import java.io.IOException;
 
 public class MenusController {
@@ -24,7 +25,6 @@ public class MenusController {
 
     @FXML
     public void initialize() {
-        // Carregar a imagem
         Image image = new Image(getClass().getResourceAsStream("/org/exemple/biblioteca/view/image/biblioteca.jpg"));
         if (image != null) {
             imageView.setImage(image);

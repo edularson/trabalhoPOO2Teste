@@ -12,8 +12,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.exemple.biblioteca.model.Livro;
 import org.exemple.biblioteca.dao.LivroDAO;
+import org.exemple.biblioteca.model.Livro;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -26,28 +26,32 @@ public class IncluiLivroController {
     @FXML
     private Button btnConf;
     @FXML
-    private TableView<Livro> tabelaLivros; // Adicione a TableView no seu FXML
+    private TableView<Livro> tabelaLivros;
     @FXML
-    private TableColumn<Livro, String> colunaTitulo; // Coluna para o título
+    private TableColumn<Livro, String> colunaTitulo;
     @FXML
-    private TableColumn<Livro, String> colunaAutor; // Coluna para o autor
+    private TableColumn<Livro, String> colunaAutor;
 
     private LivroDAO livroDAO;
     private ObservableList<Livro> listaLivros;
 
     public IncluiLivroController() {
-        livroDAO = new LivroDAO(); // Inicialize o DAO
-        listaLivros = FXCollections.observableArrayList(); // Inicialize a lista
+        livroDAO = new LivroDAO();
+        listaLivros = FXCollections.observableArrayList();
     }
 
     @FXML
     void initialize() {
-        // Configuração das colunas
         colunaTitulo.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTitulo()));
         colunaAutor.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAutor()));
 
-        carregarLivros(); // Carrega os livros ao iniciar
-        tabelaLivros.setItems(listaLivros); // Define a lista de livros na tabela
+        try {
+            listaLivros.addAll(livroDAO.buscarTodos());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        tabelaLivros.setItems(listaLivros);
     }
 
     @FXML
@@ -58,13 +62,13 @@ public class IncluiLivroController {
 
         try {
             livroDAO.inserir(livro);
-            listaLivros.add(livro); // Adiciona o livro à lista
+            listaLivros.add(livro);
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Livro cadastrado com sucesso!", ButtonType.OK);
             alert.setTitle("Cadastro de Livro");
             alert.setHeaderText("Informação");
             alert.show();
-            txtTitulo.clear(); // Limpa o campo de título
-            txtAutor.clear(); // Limpa o campo de autor
+            txtTitulo.clear();
+            txtAutor.clear();
         } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Erro ao cadastrar livro!", ButtonType.OK);
             alert.setTitle("Erro");
@@ -74,20 +78,44 @@ public class IncluiLivroController {
         }
     }
 
-    private void carregarLivros() {
-        try {
-            listaLivros.clear(); // Limpa a lista antes de carregar
-            List<Livro> livros = livroDAO.buscarTodos(); // Busca todos os livros
-            listaLivros.addAll(livros); // Adiciona todos os livros à lista
-        } catch (SQLException e) {
-            e.printStackTrace(); // Trate o erro adequadamente
-        }
+    @FXML
+    void btnVoltarOnAction() {
+        Stage stage = (Stage) btnConf.getScene().getWindow();
+        stage.close();
     }
 
     @FXML
-    void btnVoltarOnAction() {
-        // Fechar a janela atual ou retornar à tela anterior
-        Stage stage = (Stage) btnConf.getScene().getWindow();
-        stage.close(); // ou você pode carregar a tela anterior
+    void btnExcluirOnAction(ActionEvent event) {
+        Livro livroSelecionado = tabelaLivros.getSelectionModel().getSelectedItem();
+
+        if (livroSelecionado != null) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Tem certeza que deseja excluir o livro " + livroSelecionado.getTitulo() + "?", ButtonType.YES , ButtonType.NO);
+            alert.setTitle("Confirmação de Exclusão");
+            alert.setHeaderText("Atenção!");
+
+            alert.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.YES) {
+                    try {
+                        livroDAO.deletar(livroSelecionado.getLivroID());
+                        listaLivros.remove(livroSelecionado);
+                        Alert infoAlert = new Alert(Alert.AlertType.INFORMATION, "Livro excluído com sucesso!", ButtonType.OK);
+                        infoAlert.setTitle("Exclusão de Livro");
+                        infoAlert.setHeaderText("Informação");
+                        infoAlert.show();
+                    } catch (SQLException e) {
+                        Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Erro ao excluir livro!", ButtonType.OK);
+                        errorAlert.setTitle("Erro");
+                        errorAlert.setHeaderText("Erro");
+                        errorAlert.show();
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Selecione um livro para excluir.", ButtonType.OK);
+            alert.setTitle("Aviso");
+            alert.setHeaderText("Nenhum livro selecionado");
+            alert.show();
+        }
     }
 }
